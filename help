@@ -1,0 +1,6 @@
+for problem 1 serial:
+
+./serial_mining in_20k.csv 20000 100000 out.csv time.csv
+
+problem 1 autograder
+python3 autograder_problem_4_1.py
