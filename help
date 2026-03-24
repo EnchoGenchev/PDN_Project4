@@ -4,3 +4,6 @@ for problem 1 serial:
 
 problem 1 autograder
 python3 autograder_problem_4_1.py
+
+problem 2 autograder
+python3 autograder_problem_4_2.py

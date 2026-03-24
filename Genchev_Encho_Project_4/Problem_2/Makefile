@@ -1,8 +1,8 @@
 NVCC        = nvcc
 NVCC_FLAGS  = -O3 -I/usr/local/cuda/include  
 LD_FLAGS    = -lcudart -L/usr/local/cuda/lib64
-EXE			= gpu_mining_starter
-OBJ			= gpu_mining_starter.o support.o
+EXE			= gpu_mining_problem2
+OBJ			= gpu_mining_problem2.o support.o
 
 default: $(EXE)
 
@@ -24,14 +24,14 @@ OUT_B    = 1k_10k
 run:
 	clear 
 	make
-	./gpu_mining_starter $(FILE) $(SIZE) $(TRIALS_A) _out_$(OUT_A).csv _time_$(OUT_A).csv
-	./gpu_mining_starter $(FILE) $(SIZE) $(TRIALS_B) _out_$(OUT_B).csv _time_$(OUT_B).csv
+	./gpu_mining_problem2 $(FILE) $(SIZE) $(TRIALS_A) _out_$(OUT_A).csv _time_$(OUT_A).csv
+	./gpu_mining_problem2 $(FILE) $(SIZE) $(TRIALS_B) _out_$(OUT_B).csv _time_$(OUT_B).csv
 
 
 # ------------------------------------------------------------------------------- #
 
-gpu_mining_starter.o: gpu_mining_starter.cu nonce_kernel.cu hash_kernel.cu reduction_kernel.cu support.h
-	$(NVCC) -c -o $@ gpu_mining_starter.cu $(NVCC_FLAGS)
+gpu_mining_problem2.o: gpu_mining_problem2.cu nonce_kernel.cu hash_kernel.cu reduction_kernel.cu support.h
+	$(NVCC) -c -o $@ gpu_mining_problem2.cu $(NVCC_FLAGS)
 
 support.o: support.cu support.h
 	$(NVCC) -c -o $@ support.cu $(NVCC_FLAGS)
