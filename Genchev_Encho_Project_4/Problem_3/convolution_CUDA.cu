@@ -92,7 +92,8 @@ int main (int argc, char *argv[])
 
     struct timespec start, end;
 
-    // ---------------- Transfer Host to Device ---------------- //
+    // --------------------------------------------------------------------------- //
+    // ------ Algorithm Start ---------------------------------------------------- //
     clock_gettime(CLOCK_REALTIME, &start);
 
     cudaMemcpy(inputMatrix_d, inputMatrix_h, n_row*n_col*sizeof(int), cudaMemcpyHostToDevice);
@@ -102,7 +103,7 @@ int main (int argc, char *argv[])
     double time_h2d = (end.tv_sec - start.tv_sec) +
                       (end.tv_nsec - start.tv_nsec) / BILLION;
 
-    // ---------------- Kernel Execution ---------------- //
+    // set up and execute kernel
     dim3 blockSize(TILE_SIZE, TILE_SIZE);
     dim3 gridSize((n_col + TILE_SIZE - 1)/TILE_SIZE, (n_row + TILE_SIZE - 1)/TILE_SIZE);
 
@@ -115,7 +116,6 @@ int main (int argc, char *argv[])
     double time_kernel = (end.tv_sec - start.tv_sec) +
                          (end.tv_nsec - start.tv_nsec) / BILLION;
 
-    // ---------------- Transfer Device to Host ---------------- //
     clock_gettime(CLOCK_REALTIME, &start);
 
     cudaMemcpy(outputMatrix_h, outputMatrix_d, n_row*n_col*sizeof(int), cudaMemcpyDeviceToHost);
@@ -123,6 +123,8 @@ int main (int argc, char *argv[])
     clock_gettime(CLOCK_REALTIME, &end);
     double time_d2h = (end.tv_sec - start.tv_sec) +
                       (end.tv_nsec - start.tv_nsec) / BILLION;
+
+    // ------ Algorithm End ------------------------------------------------------ //
 
     // Save output matrix as csv file
     for (int i = 0; i<n_row; i++)

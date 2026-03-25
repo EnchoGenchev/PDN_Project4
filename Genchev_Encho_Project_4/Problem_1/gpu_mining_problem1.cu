@@ -99,14 +99,14 @@ int main(int argc, char* argv[]) {
     // Device memory
     unsigned int *device_transactions, *device_hash_array;
 
-    // Allocate
+    //allocate
     cudaMalloc((void**)&device_transactions, n_transactions * sizeof(unsigned int));
     cudaMalloc((void**)&device_hash_array, trials * sizeof(unsigned int));
 
-    // Copy transactions to device
+    //copy transactions to device
     cudaMemcpy(device_transactions, transactions, n_transactions * sizeof(unsigned int), cudaMemcpyHostToDevice);
 
-    // Launch kernel
+    //launch kernel
     hash_kernel<<<dimGrid, dimBlock>>>(
         device_nonce_array,
         device_transactions,
@@ -117,7 +117,7 @@ int main(int argc, char* argv[]) {
 
     cudaDeviceSynchronize();
 
-    // Copy back results
+    //copy back results
     unsigned int* hash_array = (unsigned int*)calloc(trials, sizeof(unsigned int));
     cudaMemcpy(hash_array, device_hash_array, trials * sizeof(unsigned int), cudaMemcpyDeviceToHost);
 

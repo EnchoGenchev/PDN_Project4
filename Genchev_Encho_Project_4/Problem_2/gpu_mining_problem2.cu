@@ -97,17 +97,17 @@ int main(int argc, char* argv[]) {
     // ------ Step 2: Generate the hash values ------ //
 
     // TODO Problem 1: perform this hash generation in the GPU
-    // Device memory
+    //memory
     unsigned int *device_transactions, *device_hash_array;
 
-    // Allocate
+    //allocate
     cudaMalloc((void**)&device_transactions, n_transactions * sizeof(unsigned int));
     cudaMalloc((void**)&device_hash_array, trials * sizeof(unsigned int));
 
-    // Copy transactions to device
+    //copy transactions to device
     cudaMemcpy(device_transactions, transactions, n_transactions * sizeof(unsigned int), cudaMemcpyHostToDevice);
 
-    // Launch kernel
+    //launch kernel
     hash_kernel<<<dimGrid, dimBlock>>>(
         device_nonce_array,
         device_transactions,
@@ -118,7 +118,7 @@ int main(int argc, char* argv[]) {
 
     cudaDeviceSynchronize();
 
-    // Copy back results
+    //copy back results
     unsigned int* hash_array = (unsigned int*)calloc(trials, sizeof(unsigned int));
     cudaMemcpy(hash_array, device_hash_array, trials * sizeof(unsigned int), cudaMemcpyDeviceToHost);
 
@@ -130,15 +130,15 @@ int main(int argc, char* argv[]) {
 
     // TODO Problem 2: find the minimum in the GPU by reduction
 
-    // CEILING division (FIXES YOUR BUG)
+    //division
     int reduced_size = (trials + (2 * BLOCK_SIZE - 1)) / (2 * BLOCK_SIZE);
 
-    // Allocate device output
+    //device output
     unsigned int *device_out_hash, *device_out_nonce;
     cudaMalloc((void**)&device_out_hash, reduced_size * sizeof(unsigned int));
     cudaMalloc((void**)&device_out_nonce, reduced_size * sizeof(unsigned int));
 
-    // Launch reduction kernel
+    //reduction kernel
     reduction_kernel<<<reduced_size, BLOCK_SIZE>>>(
         device_hash_array,
         device_nonce_array,
@@ -149,14 +149,14 @@ int main(int argc, char* argv[]) {
 
     cudaDeviceSynchronize();
 
-    // Copy back results
+    //copy back results
     unsigned int* reduced_hash = (unsigned int*)calloc(reduced_size, sizeof(unsigned int));
     unsigned int* reduced_nonce = (unsigned int*)calloc(reduced_size, sizeof(unsigned int));
 
     cudaMemcpy(reduced_hash, device_out_hash, reduced_size * sizeof(unsigned int), cudaMemcpyDeviceToHost);
     cudaMemcpy(reduced_nonce, device_out_nonce, reduced_size * sizeof(unsigned int), cudaMemcpyDeviceToHost);
 
-    // Final CPU reduction
+    //final reduction
     unsigned int min_hash = MAX;
     unsigned int min_nonce = MAX;
 
@@ -167,7 +167,7 @@ int main(int argc, char* argv[]) {
         }
     }
 
-    // Free reduction memory
+    //free reduction memory
     cudaFree(device_out_hash);
     cudaFree(device_out_nonce);
     free(reduced_hash);
