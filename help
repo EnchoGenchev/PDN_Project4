@@ -5,5 +5,13 @@ for problem 1 serial:
 problem 1 autograder
 python3 autograder_problem_4_1.py
 
+
 problem 2 autograder
 python3 autograder_problem_4_2.py
+
+
+problem 3 running serial
+./convolution_serial 2048 2048 mat_input.csv serial_output.csv serial_time.csv
+
+problem 3 autograder
+python3 autograder_problem_4_3.py
